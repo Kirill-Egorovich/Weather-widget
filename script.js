@@ -16,8 +16,7 @@ function getTime() {
     return `${hours}:${minutes}`;
 }
 
-const renderCurrent = (data) => {
-    let cityName = data.city.name;
+const renderCurrent = (data, userCity) => {
     let weatherInfo = data.list[0].weather[0].main; 
     let temperature = Math.round(data.list[0].main.temp);
     let windSpeed = data.list[0].wind.speed;
@@ -26,7 +25,7 @@ const renderCurrent = (data) => {
 
 
     const template = `
-    <p class="city">${cityName}</p>
+    <p class="city">${userCity}</p>
     <p class="time">${now}</p>
     <div class="wrapper">
         <img src="https://openweathermap.org/img/wn/${iconSrc}@2x.png" alt="">
@@ -55,11 +54,16 @@ const renderForecast = (url, date, temp) => {
         forecast.innerHTML += downTemplate;
 };
 
-fetch('https://api.openweathermap.org/data/2.5/forecast?q=Tashkent&units=metric&appid=a94d0a5ac08570add4b47b8da933f247')
-.then((response) =>  response.json())
-.then((data) => {
+ymaps.ready(function () {
+    const userCity = ymaps.geolocation.city;
+    console.log(userCity);
+
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${userCity}&units=metric&appid=a94d0a5ac08570add4b47b8da933f247`)
+    .then((response) =>  response.json())
+    .then((data) => {
     console.log(data);
-    renderCurrent(data);
+    renderCurrent(data, userCity);
+
     for(let i = 0; i < data.list.length; i += 8){
         renderForecast(
             data.list[i].weather[0].icon,
@@ -67,4 +71,5 @@ fetch('https://api.openweathermap.org/data/2.5/forecast?q=Tashkent&units=metric&
             Math.round(data.list[i].main.temp)
         );
     }
+});
 });
