@@ -19,12 +19,13 @@ body{
 }
 
 .city{
-    color: white;
+    color: #fff;
     padding: 10px 0 0 10px;
+    font-size: 17px;
 }
 
 .time{
-    color: white;
+    color: #fff;
     padding: 5px 0 0 10px;
 }
 
